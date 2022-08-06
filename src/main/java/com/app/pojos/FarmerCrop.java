@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -30,7 +31,7 @@ public class FarmerCrop extends BaseEntity {
 	@Column(length = 30)
 	private String grade;
 	@Column(name = "sowing_date")
-	private LocalDate sowingDate;
+	private LocalDate sowingDate;//"YYYY-MM-DD"
 	@Column(name = "harvest_date")
 	private LocalDate harvestDate;
 	private Double quantity;
@@ -39,7 +40,7 @@ public class FarmerCrop extends BaseEntity {
 	private Double leastPrice;
 	private boolean status;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "f_id")
 	private User user;
 

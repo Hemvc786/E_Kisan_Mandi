@@ -1,7 +1,9 @@
 package com.app.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,11 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.app.custom_exceptions.ResourceNotFoundException;
 import com.app.dao.AddressRepository;
 import com.app.dao.UserRepository;
+import com.app.dto.UserDTO;
 import com.app.pojos.Address;
 import com.app.pojos.User;
 
 @Service
-@Transactional
+@Transactional//tx mangement--->any time when there is dao layer method involment(CRUD)
 public class UserServiceImpl implements IUserService {
 
 	@Autowired
@@ -21,23 +24,33 @@ public class UserServiceImpl implements IUserService {
 	
 	@Autowired
 	private AddressRepository addressRepo;
+	
+	@Autowired
+	private ModelMapper mapper;
 
 	@Override
-	public User saveUserDetails(User user) {
+	public UserDTO saveUserDetails(UserDTO userDto) {
+		User user = mapper.map(userDto, User.class);//DTO ---> Entity
 		User persistentUser = userRepo.save(user);
-		return persistentUser;
+	
+		return mapper.map(persistentUser, UserDTO.class);
 	}
 	
 	@Override
-	public List<User> getAllUserDetails() {
-		return userRepo.findAll();
+	public List<UserDTO> getAllUserDetails() {
+		List<User> list = userRepo.findAll();
+		List<UserDTO> userDtoList=new ArrayList<>();
+		for(User u:list) {
+			userDtoList.add(mapper.map(u, UserDTO.class));
+		}
+		return userDtoList;
 	}
 
 	@Override
-	public User getUserDetails(Long userId) {
+	public UserDTO getUserDetails(Long userId) {
 		User user = userRepo.findById(userId)
 				.orElseThrow(() -> new ResourceNotFoundException("Invalid User id..!!!!!!" + userId));
-		return user;
+		return mapper.map(user, UserDTO.class);
 	}
 
 	@Override
@@ -52,14 +65,17 @@ public class UserServiceImpl implements IUserService {
 	}
 
 	@Override
-	public User updateUserDetails(User updatedUser) {
-		return userRepo.save(updatedUser);
+	public UserDTO updateUserDetails(UserDTO updatedUser) {
+		User user = mapper.map(updatedUser, User.class);
+		
+		return mapper.map(userRepo.save(user), UserDTO.class);
 	}
 
 	
 	@Override
 	public String linkAddress(Long userId, Address a) {
-		User user = getUserDetails(userId);//above method
+		User user = userRepo.findById(userId)
+				.orElseThrow(() -> new ResourceNotFoundException("Invalid User id..!!!!!!" + userId));
 		a.setUser(user);
 		addressRepo.save(a);
 		return "Address Linked Successfully";
@@ -70,6 +86,15 @@ public class UserServiceImpl implements IUserService {
 		Address a = addressRepo.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Invalid User id..!!!!"+id));
 		return a;
+	}
+
+	@Override
+	public Address updateAddress(Long userId, Address updatedAddress) {
+		User user = userRepo.findById(userId)
+				.orElseThrow(() -> new ResourceNotFoundException("Invalid User id..!!!!!!" + userId));
+		updatedAddress.setUser(user);
+		addressRepo.save(updatedAddress);
+		return updatedAddress;
 	}
 	
 }

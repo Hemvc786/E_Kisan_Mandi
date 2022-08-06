@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.app.dto.UserDTO;
 import com.app.pojos.Address;
-import com.app.pojos.User;
 import com.app.service.IUserService;
 
 @RestController 
@@ -39,13 +39,13 @@ public class UsersController {
 	
 	
 	@PostMapping
-	public ResponseEntity<User> registerUser(@RequestBody @Valid User user) {
+	public ResponseEntity<UserDTO> registerUser(@RequestBody @Valid UserDTO user) {
 		return new ResponseEntity<>( userService.saveUserDetails(user), HttpStatus.CREATED);
 	}
 	
 	@GetMapping
 	public ResponseEntity<?> listAllUsers(){
-		 List<User> list = userService.getAllUserDetails();
+		 List<UserDTO> list = userService.getAllUserDetails();
 		 if(list.isEmpty())
 				return ResponseEntity.ok("Empty List...!!!!");
 		 		//return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -63,7 +63,7 @@ public class UsersController {
 	}
 	
 	@PutMapping
-	public User updateUser(@RequestBody @Valid User user) {
+	public UserDTO updateUser(@RequestBody @Valid UserDTO user) {
 		return userService.updateUserDetails(user);
 	}
 	
@@ -78,5 +78,10 @@ public class UsersController {
 			return ResponseEntity.ok(userService.getAddress(id));	
 	}
 	
+	@PutMapping("/{id}/address")
+	public ResponseEntity<Address> updateUserAddress(@PathVariable Long id,@RequestBody Address a) {
+		return new ResponseEntity<>(userService.updateAddress(id, a),HttpStatus.CREATED);
+		
+	}
 
 }

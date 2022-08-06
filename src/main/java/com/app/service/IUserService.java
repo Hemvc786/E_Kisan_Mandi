@@ -2,31 +2,34 @@ package com.app.service;
 
 import java.util.List;
 
+import com.app.dto.UserDTO;
 import com.app.pojos.Address;
-import com.app.pojos.User;
 
 public interface IUserService {
 	
 		//save new user details
-		User saveUserDetails(User user);
+		UserDTO saveUserDetails(UserDTO user);
 		
 		//get all users
-		List<User> getAllUserDetails();
+		List<UserDTO> getAllUserDetails();
 		
 		//get user details by specified id
-		User getUserDetails(Long userId);
+		UserDTO getUserDetails(Long userId);
 		
 		//delete user details
 		String deleteUserDetails(Long userId);
 		
 		//update user details
-		User updateUserDetails(User updatedUser);
+		UserDTO updateUserDetails(UserDTO updatedUser);
 
 		//Link Address to user
 		String linkAddress(Long userId,Address a);
 		
 		//get Address of user
 		Address getAddress(Long id);
+		
+		//update address
+		Address updateAddress(Long userId, Address updatedAddress);
 		
 //		//get user from user name and password
 //		Users getUser(String userName,String Password);

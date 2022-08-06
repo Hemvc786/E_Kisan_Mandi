@@ -2,24 +2,27 @@ package com.app.service;
 
 import java.util.List;
 
-import com.app.pojos.FarmerCrop;
+import com.app.dto.FarmerCropDTO;
 
 public interface IFarmerCropService {
 
 	//save new crop details
-	FarmerCrop saveCropDetails(FarmerCrop crop);
+	FarmerCropDTO saveCropDetails(Long fId, FarmerCropDTO crop);
 	
-	//get all Crops
-	List<FarmerCrop> getAllCropsDetails();
+	//get all Crops for trader
+	List<FarmerCropDTO> getAllCropsDetails();
+	
+	//get all Crops of specific farmer
+	List<FarmerCropDTO> getAllCropsDetailsOfSpecificFarmer(Long fId);
 	
 	//get crop details by specified id
-	FarmerCrop getCropDetails(Long cropId);
+	FarmerCropDTO getCropDetails(Long cropId);
 	
 	//delete crop details
 	String deleteCropDetails(Long cropId);
 	
 	//update crop details
-	FarmerCrop updateCropDetails(FarmerCrop updatedCrop);
+	FarmerCropDTO updateCropDetails(FarmerCropDTO updatedCrop);
 	
 	
 }
