@@ -31,11 +31,14 @@ public class UsersController {
 	@Autowired
 	private IUserService userService;
 	
-//	@GetMapping("/login")
-//	public String authenticateUser(@RequestBody String userName,@RequestBody String pass) {
-//		userService.getUser(userName, pass);
-//		return null;
-//	}
+	@PostMapping("/login")
+	public ResponseEntity<?> authenticateUserRequest(@RequestBody String email,@RequestBody String pass) {
+		UserDTO authenticatedUser = userService.AuthenticateUser(email, pass);
+		if(authenticatedUser == null) {
+			return new ResponseEntity<>("Invalid User Details", HttpStatus.OK);
+		}
+		return new ResponseEntity<>(authenticatedUser,HttpStatus.OK);
+	}
 	
 	
 	@PostMapping
@@ -68,7 +71,7 @@ public class UsersController {
 	}
 	
 	@PostMapping("/{id}/address")
-	public ResponseEntity<String> LinkUserAddress(@PathVariable Long id,@RequestBody Address a) {
+	public ResponseEntity<String> linkUserAddress(@PathVariable Long id,@RequestBody Address a) {
 		return new ResponseEntity<>(userService.linkAddress(id, a),HttpStatus.CREATED);
 		
 	}

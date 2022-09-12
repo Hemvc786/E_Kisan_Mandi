@@ -1,5 +1,6 @@
 package com.app.dto;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -27,8 +28,10 @@ public class UserDTO extends BaseEntity{
 		@NotEmpty(message = "Last name must be supplied")
 		private String lastName;
 		
-		@Length(min = 4,max=30,message = "Invalid user name length")
-		private String userName;
+		@NotEmpty
+		@Length(min=5,max=20)
+		@Email
+		private String email;
 		
 		@JsonProperty(access = Access.WRITE_ONLY) //for de-serialization only=>password won't be serialized to json
 		@Pattern(regexp="((?=.*\\d)(?=.*[a-z])(?=.*[#@$*]).{5,20})")

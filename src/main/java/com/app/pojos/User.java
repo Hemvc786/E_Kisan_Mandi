@@ -31,7 +31,7 @@ public class User extends BaseEntity {
 	private String lastName;
 	
 	@Column(length = 30)
-	private String userName;
+	private String email;
 	
 	@Column(length = 30)
 	private String password;

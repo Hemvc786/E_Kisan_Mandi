@@ -96,5 +96,11 @@ public class UserServiceImpl implements IUserService {
 		addressRepo.save(updatedAddress);
 		return updatedAddress;
 	}
+
+	@Override
+	public UserDTO AuthenticateUser(String email, String Password) {
+		User user = userRepo.authenticateUserDetails(email, Password);
+		return mapper.map(user, UserDTO.class);
+	}
 	
 }

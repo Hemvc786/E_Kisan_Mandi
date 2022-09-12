@@ -31,6 +31,6 @@ public interface IUserService {
 		//update address
 		Address updateAddress(Long userId, Address updatedAddress);
 		
-//		//get user from user name and password
-//		Users getUser(String userName,String Password);
+		//get user from user name and password
+		UserDTO AuthenticateUser(String email,String Password);
 }
