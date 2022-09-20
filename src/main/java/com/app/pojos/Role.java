@@ -1,5 +1,5 @@
 package com.app.pojos;
 
 public enum Role {
-FARMER,TRADER
+FARMER,TRADER,ADMIN
 }

@@ -9,9 +9,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.app.custom_exceptions.ResourceNotFoundException;
+import com.app.dao.BidsRepository;
 import com.app.dao.FarmerCropRepository;
 import com.app.dao.UserRepository;
 import com.app.dto.FarmerCropDTO;
+import com.app.dto.UserDTO;
 import com.app.pojos.FarmerCrop;
 import com.app.pojos.User;
 
@@ -27,6 +29,9 @@ public class FarmerCropServiceImpl implements IFarmerCropService {
 
 	@Autowired
 	private UserRepository userRepo;
+	
+	@Autowired
+	private BidsRepository bidRepo;
 
 	@Override
 	public FarmerCropDTO saveCropDetails(Long fId, FarmerCropDTO cropDto) {
@@ -77,6 +82,7 @@ public class FarmerCropServiceImpl implements IFarmerCropService {
 		String mesg = "Deletion of Crop details failed.!!!!!!!!";
 		
 		if (farmerCropRepo.existsById(cropId)) {
+			bidRepo.deleteBidByCropId(cropId);
 			farmerCropRepo.deleteById(cropId);
 			mesg = "Crop details deleted successfully , for crop id : " + cropId;
 		}
@@ -84,9 +90,27 @@ public class FarmerCropServiceImpl implements IFarmerCropService {
 	}
 
 	@Override
-	public FarmerCropDTO updateCropDetails(FarmerCropDTO updatedCrop) {
+	public FarmerCropDTO updateCropDetails(Long fId,FarmerCropDTO updatedCrop) {
+		User user = userRepo.getById(fId);
 		FarmerCrop crop = mapper.map(updatedCrop, FarmerCrop.class);
+		crop.setUser(user);
 		return mapper.map(farmerCropRepo.save(crop), FarmerCropDTO.class);
+	}
+
+	@Override
+	public List<FarmerCropDTO> getAllCropsByName(String name) {
+		List<FarmerCrop> crops = farmerCropRepo.getCropFromCropName(name);
+		List<FarmerCropDTO> cropDtoList = new ArrayList<>();
+		for (FarmerCrop c : crops) {
+			cropDtoList.add(mapper.map(c, FarmerCropDTO.class));
+		}
+		return cropDtoList;
+	}
+
+	@Override
+	public UserDTO getFarmerByCropId(Long cropId) {
+		FarmerCrop crop = farmerCropRepo.getById(cropId);
+		return mapper.map(crop.getUser(), UserDTO.class);
 	}
 
 }

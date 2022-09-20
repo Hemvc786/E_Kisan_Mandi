@@ -13,5 +13,8 @@ public interface FarmerCropRepository extends JpaRepository<FarmerCrop, Long> {
 	
 	@Query("select c from FarmerCrop c where c.user.id=?1")
 	List<FarmerCrop> getCropFromFarmerId(Long fId);
+	
+	@Query("select c from FarmerCrop c where c.cropName=?1")
+	List<FarmerCrop> getCropFromCropName(String fName);
 
 }

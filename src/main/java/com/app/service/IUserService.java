@@ -2,8 +2,10 @@ package com.app.service;
 
 import java.util.List;
 
+import com.app.dto.AddressDTO;
+import com.app.dto.AuthRequestDTO;
 import com.app.dto.UserDTO;
-import com.app.pojos.Address;
+import com.app.pojos.Role;
 
 public interface IUserService {
 	
@@ -23,14 +25,17 @@ public interface IUserService {
 		UserDTO updateUserDetails(UserDTO updatedUser);
 
 		//Link Address to user
-		String linkAddress(Long userId,Address a);
+		AddressDTO linkAddress(Long userId,AddressDTO a);
 		
 		//get Address of user
-		Address getAddress(Long id);
+		AddressDTO getAddress(Long id);
 		
 		//update address
-		Address updateAddress(Long userId, Address updatedAddress);
+		AddressDTO updateAddress(Long userId, AddressDTO updatedAddress);
 		
 		//get user from user name and password
-		UserDTO AuthenticateUser(String email,String Password);
+		UserDTO AuthenticateUser(AuthRequestDTO user);
+		
+		//user list by role
+		List<UserDTO> getUserByRole(Role role);
 }

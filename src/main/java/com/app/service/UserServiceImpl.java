@@ -11,8 +11,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.app.custom_exceptions.ResourceNotFoundException;
 import com.app.dao.AddressRepository;
 import com.app.dao.UserRepository;
+import com.app.dto.AddressDTO;
+import com.app.dto.AuthRequestDTO;
 import com.app.dto.UserDTO;
 import com.app.pojos.Address;
+import com.app.pojos.Role;
 import com.app.pojos.User;
 
 @Service
@@ -73,34 +76,45 @@ public class UserServiceImpl implements IUserService {
 
 	
 	@Override
-	public String linkAddress(Long userId, Address a) {
-		User user = userRepo.findById(userId)
-				.orElseThrow(() -> new ResourceNotFoundException("Invalid User id..!!!!!!" + userId));
-		a.setUser(user);
-		addressRepo.save(a);
-		return "Address Linked Successfully";
+	public AddressDTO linkAddress(Long userId, AddressDTO a) {
+		Address address = mapper.map(a, Address.class);
+		User user = userRepo.getById(userId);
+				//.orElseThrow(() -> new ResourceNotFoundException("Invalid User id..!!!!!!" + userId));
+		address.setUser(user);
+		return mapper.map(addressRepo.save(address), AddressDTO.class);
 	}
 
 	@Override
-	public Address getAddress(Long id) {
+	public AddressDTO getAddress(Long id) {
 		Address a = addressRepo.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Invalid User id..!!!!"+id));
-		return a;
+		return mapper.map(a, AddressDTO.class);
 	}
 
 	@Override
-	public Address updateAddress(Long userId, Address updatedAddress) {
-		User user = userRepo.findById(userId)
-				.orElseThrow(() -> new ResourceNotFoundException("Invalid User id..!!!!!!" + userId));
-		updatedAddress.setUser(user);
-		addressRepo.save(updatedAddress);
-		return updatedAddress;
+	public AddressDTO updateAddress(Long userId, AddressDTO updatedAddress) {
+		Address adr = mapper.map(updatedAddress, Address.class);
+		User user = userRepo.getById(userId);
+				//.orElseThrow(() -> new ResourceNotFoundException("Invalid User id..!!!!!!" + userId));
+		adr.setUser(user);
+		return mapper.map(addressRepo.save(adr), AddressDTO.class);
 	}
 
 	@Override
-	public UserDTO AuthenticateUser(String email, String Password) {
-		User user = userRepo.authenticateUserDetails(email, Password);
-		return mapper.map(user, UserDTO.class);
+	public UserDTO AuthenticateUser(AuthRequestDTO user) {
+		User authUser = mapper.map(user, User.class);
+		User authenticateduser = userRepo.authenticateUserDetails(authUser.getEmail(), authUser.getPassword());
+		return mapper.map(authenticateduser, UserDTO.class);
+	}
+
+	@Override
+	public List<UserDTO> getUserByRole(Role role) {
+		List<User> list = userRepo.findByRole(role);
+		List<UserDTO> dtoList = new ArrayList<>();
+		for(User u:list) {
+			dtoList.add(mapper.map(u, UserDTO.class));
+		}
+		return dtoList;
 	}
 	
 }

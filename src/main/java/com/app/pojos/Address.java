@@ -18,6 +18,8 @@ import lombok.Setter;
 public class Address extends BaseEntity {
 	
 	@Column(length = 30)
+	private String location;
+	@Column(length = 30)
 	private String tehsil;
 	@Column(length = 30)
 	private String district;
@@ -25,29 +27,32 @@ public class Address extends BaseEntity {
 	private String state;
 	@Column(length = 30)
 	private String country;
+	@Column(length = 30)
+	private String pinCode;
 	
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id",nullable = false) //nullable is optional but recommended to use in onetoOne uni-directional case
 	@MapsId 
 	private User user;
 
-	public Address(String tehsil, String district, String state, String country) {
+	public Address(String location,String tehsil, String district, String state, String country,String pinCode) {
 		super();
+		this.location =location;
 		this.tehsil = tehsil;
 		this.district = district;
 		this.state = state;
 		this.country = country;
+		this.pinCode = pinCode;
+	
 	}
-	
-	
 	
 	@Override
 	public String toString() {
-		return "Address [tehsil=" + tehsil + ", district=" + district + ", state=" + state + ", country=" + country
-				+ "]";
+		return "Address [location=" + location + ", tehsil=" + tehsil + ", district=" + district + ", state=" + state
+				+ ", country=" + country + ", pinCode=" + pinCode + "]";
 	}
 
-
+	
 	public String getTehsil() {
 		return tehsil;
 	}
@@ -64,5 +69,12 @@ public class Address extends BaseEntity {
 		return country;
 	}
 
+	public String getLocation() {
+		return location;
+	}
+
+	public String getPinCode() {
+		return pinCode;
+	}
 	
 }

@@ -18,8 +18,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.app.dto.AddressDTO;
+import com.app.dto.AuthRequestDTO;
 import com.app.dto.UserDTO;
-import com.app.pojos.Address;
+import com.app.pojos.Role;
 import com.app.service.IUserService;
 
 @RestController 
@@ -32,12 +34,15 @@ public class UsersController {
 	private IUserService userService;
 	
 	@PostMapping("/login")
-	public ResponseEntity<?> authenticateUserRequest(@RequestBody String email,@RequestBody String pass) {
-		UserDTO authenticatedUser = userService.AuthenticateUser(email, pass);
-		if(authenticatedUser == null) {
+	public ResponseEntity<?> authenticateUserRequest(@RequestBody @Valid AuthRequestDTO authUser) {
+		try {
+			UserDTO authenticatedUser = userService.AuthenticateUser(authUser);
+			return new ResponseEntity<>(authenticatedUser,HttpStatus.OK);
+		}catch (Exception e) {
+			System.out.println("error in authentication: "+e);
 			return new ResponseEntity<>("Invalid User Details", HttpStatus.OK);
 		}
-		return new ResponseEntity<>(authenticatedUser,HttpStatus.OK);
+		
 	}
 	
 	
@@ -71,7 +76,7 @@ public class UsersController {
 	}
 	
 	@PostMapping("/{id}/address")
-	public ResponseEntity<String> linkUserAddress(@PathVariable Long id,@RequestBody Address a) {
+	public ResponseEntity<AddressDTO> linkUserAddress(@PathVariable Long id,@RequestBody AddressDTO a) {
 		return new ResponseEntity<>(userService.linkAddress(id, a),HttpStatus.CREATED);
 		
 	}
@@ -82,9 +87,16 @@ public class UsersController {
 	}
 	
 	@PutMapping("/{id}/address")
-	public ResponseEntity<Address> updateUserAddress(@PathVariable Long id,@RequestBody Address a) {
+	public ResponseEntity<AddressDTO> updateUserAddress(@PathVariable Long id,@RequestBody AddressDTO a) {
 		return new ResponseEntity<>(userService.updateAddress(id, a),HttpStatus.CREATED);
 		
 	}
-
+	
+	@GetMapping("/role/{role}")
+	public ResponseEntity<?> userListByRole(@PathVariable Role role){
+		 List<UserDTO> list = userService.getUserByRole(role);
+		 if(list.isEmpty())
+				return ResponseEntity.ok("Empty List...!!!!");
+			return new ResponseEntity<>(list,HttpStatus.OK);
+	}
 }

@@ -3,6 +3,7 @@ package com.app.service;
 import java.util.List;
 
 import com.app.dto.FarmerCropDTO;
+import com.app.dto.UserDTO;
 
 public interface IFarmerCropService {
 
@@ -22,7 +23,12 @@ public interface IFarmerCropService {
 	String deleteCropDetails(Long cropId);
 	
 	//update crop details
-	FarmerCropDTO updateCropDetails(FarmerCropDTO updatedCrop);
+	FarmerCropDTO updateCropDetails(Long fId, FarmerCropDTO updatedCrop);
 	
+	//get crop from name
+	List<FarmerCropDTO> getAllCropsByName(String name);
+	
+	//get farmer from crop id
+	UserDTO getFarmerByCropId(Long cropId);
 	
 }

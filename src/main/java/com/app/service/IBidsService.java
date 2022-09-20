@@ -2,7 +2,10 @@ package com.app.service;
 
 import java.util.List;
 
+import com.app.dto.BidCropDTO;
 import com.app.dto.BidsDTO;
+import com.app.dto.FarmerCropDTO;
+import com.app.dto.UserDTO;
 import com.app.pojos.Bids;
 
 public interface IBidsService {
@@ -16,6 +19,9 @@ public interface IBidsService {
 		//get bids from crop id
 		List<BidsDTO> getAllBidsFromCropId(Long cropId);
 		
+		//get bids from bidder id
+		List<BidCropDTO> getAllBidsFromBidderId(Long bidderId);
+		
 		//get bid details by specified id
 		Bids getBidDetails(Long bidId);
 		
@@ -24,5 +30,14 @@ public interface IBidsService {
 		
 		//update bid details
 		Bids updateBidDetails(Bids updatedBid);
+		
+		//to get bidder from bid id
+		UserDTO getBidder(Long bidId);
+		
+		//delete bid by crop id
+		String deleteBidByCropId(Long cropId);
+		
+		//to get crop from bid id
+		FarmerCropDTO getCropByBidId(Long bidId);
 
 }

@@ -28,7 +28,7 @@ public class UserDTO extends BaseEntity{
 		@NotEmpty(message = "Last name must be supplied")
 		private String lastName;
 		
-		@NotEmpty
+		@NotEmpty(message = "Email must be supplied")
 		@Length(min=5,max=20)
 		@Email
 		private String email;

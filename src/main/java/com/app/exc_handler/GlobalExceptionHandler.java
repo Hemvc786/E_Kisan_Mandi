@@ -42,4 +42,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 	public ResponseEntity<?> handleRuntimeException(RuntimeException e) {
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse(e.getMessage()));
 	}
+	
+
+	@ExceptionHandler(IllegalArgumentException.class)
+	public ResponseEntity<?> handleIllegalArgumentException(IllegalArgumentException e){
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse(e.getMessage()));
+	}
 }
